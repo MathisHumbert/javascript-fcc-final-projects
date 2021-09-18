@@ -2,11 +2,12 @@ function checkCashRegister(price, cash, cid) {
   let moneyBack = cash - price;
   let change = null;
   let finalArr = [];
+  let finalResult = {};
 
-  console.log(moneyBack);
+  let acc = 0;
+  cid.forEach((item) => (acc += item[1]));
 
-  console.log(`final change: ${getTheMoney(moneyBack, change, cid, finalArr)}`);
-  return change;
+  return getTheMoney(moneyBack, change, cid, finalArr);
 }
 
 function getTheMoney(moneyBack, change, cid, arr) {
@@ -120,12 +121,19 @@ function getTheMoney(moneyBack, change, cid, arr) {
       arr = pushValue(arr, 'PENNY', 0.01);
     }
   }
+  // case unsufficient funds
+  else {
+    return { status: 'INSUFFICIENT_FUNDS', change: [] };
+  }
 
+  console.log(cid[0]);
   console.log(arr);
+  console.log(moneyBack);
+  console.log(change);
 
-  // if the change is correct
+  // if the change is correct return the final change
   if (moneyBack === 0) {
-    return change.toFixed(2);
+    return { status: 'OPEN', change: arr };
   }
   // else run the func again
   else {
@@ -133,33 +141,10 @@ function getTheMoney(moneyBack, change, cid, arr) {
   }
 }
 
-checkCashRegister(3.26, 100, [
-  ['PENNY', 1.01],
-  ['NICKEL', 2.05],
-  ['DIME', 3.1],
-  ['QUARTER', 4.25],
-  ['ONE', 90],
-  ['FIVE', 55],
-  ['TEN', 20],
-  ['TWENTY', 60],
-  ['ONE HUNDRED', 100],
-]);
-
-let arr1 = [
-  ['PENNY', 1.01],
-  ['NICKEL', 2.05],
-  ['DIME', 3.1],
-  ['QUARTER', 4.25],
-  ['ONE', 90],
-  ['FIVE', 55],
-  ['TEN', 20],
-  ['TWENTY', 60],
-  ['ONE HUNDRED', 100],
-];
-
 function foundArr(arr, arr2) {
   return arr.some((arr) => arr[0] == arr2[0]);
 }
+
 function pushValue(arr, money, number) {
   arr.forEach((item) => {
     if (item.includes(money)) {
